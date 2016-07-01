@@ -1,0 +1,14 @@
+*.pyc
+*.log
+*.project
+*.sublime*
+*.directory
+*.DS_STORE
+*.dump
+.vagrant/*
+env
+local_settings.py*
+settings_local.py*
+
+dependencies/
+django_statics/
