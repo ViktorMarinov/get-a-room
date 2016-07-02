@@ -1,7 +1,6 @@
 from django.contrib.auth.models import Group
 from accounts.models import User
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
 
 
 class SimpleGroupSerializer(serializers.ModelSerializer):
@@ -22,10 +21,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         many=True,
         read_only=True
     )
-    
+
     def create(self, validated_data):
         user = User.objects.create(
-            username = validated_data['username']
+            validated_data
         )
         user.set_password(validated_data['password'])
         user.save()

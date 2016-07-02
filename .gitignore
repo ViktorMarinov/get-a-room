@@ -13,3 +13,4 @@ settings_local.py*
 dependencies/
 django_statics/
 *.py[co]
+settings.py

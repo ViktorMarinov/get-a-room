@@ -18,6 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    http_method_names = ['get', 'head']
 
     @list_route()
     def getuser(self, request):

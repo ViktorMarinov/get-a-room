@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'get_a_room.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'get_a_room',
-        'USER': 'postgres',
-        'PASSWORD': '',
+        'NAME': 'rooms_booking',
+        'USER': 'djangoapp',
+        'PASSWORD': 'django',
         'HOST': 'localhost',
         'PORT': ''
     }
