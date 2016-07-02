@@ -89,7 +89,7 @@ mkvirtualenv -a `pwd` -p /opt/python3/bin/python3.5 get_a_room
 chown -R vagrant:vagrant $USER_HOME/.virtualenvs
 
 workon get_a_room
-pip install -r requirements/dev_requirements.txt
+pip install -r requirements.txt
 
 killall -9 python
 

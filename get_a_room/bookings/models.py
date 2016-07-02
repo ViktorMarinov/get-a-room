@@ -12,17 +12,19 @@ class Booking(models.Model):
     room_number = models.ForeignKey(
         Room,
         related_name='booking',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=False
     )
     user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='booking',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=False
     )
     start_date = models.DateField()
     end_date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(blank=False)
+    end_time = models.TimeField(blank=False)
     day_of_week = my_fields.DayOfTheWeekField()
 
     def __str__(self):

@@ -7,6 +7,7 @@ from django.contrib.auth.models import Permission, Group
 
 
 def add_groups(apps, schema_editor):
+
     teachers, created_teachers = Group.objects.get_or_create(name='teachers')
     students, created_students = Group.objects.get_or_create(name='students')
 
@@ -21,7 +22,6 @@ def add_groups(apps, schema_editor):
     )
 
     teachers.save()
-
 
 class Migration(migrations.Migration):
 
