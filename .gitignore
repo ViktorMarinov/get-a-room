@@ -1,4 +1,4 @@
-*.pyc
+**.pyc
 *.log
 *.project
 *.sublime*
@@ -12,3 +12,4 @@ settings_local.py*
 
 dependencies/
 django_statics/
+*.py[co]
