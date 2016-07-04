@@ -13,22 +13,30 @@ class BookingSerializer(serializers.ModelSerializer):
         queryset=RoomViewSet.queryset
     )
 
-    user_id = serializers.PrimaryKeyRelatedField(
+    user = serializers.PrimaryKeyRelatedField(
         queryset=UserViewSet.queryset
     )
 
     start_date = serializers.DateField()
     end_date = serializers.DateField()
 
+    def validate(self, data):
+        super(BookingSerializer, self).validate(data)
+
+        print(data)
+        return data
+
     class Meta:
         model = Booking
         fields = (
             'url',
             'room_number',
-            'user_id',
+            'user',
             'start_date',
             'end_date',
             'start_time',
             'end_time',
             'day_of_week'
         )
+
+

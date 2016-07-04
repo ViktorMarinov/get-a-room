@@ -15,7 +15,7 @@ class Booking(models.Model):
         on_delete=models.CASCADE,
         blank=False
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='booking',
         on_delete=models.CASCADE,

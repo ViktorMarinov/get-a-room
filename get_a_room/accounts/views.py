@@ -70,7 +70,6 @@ def register(request):
         )
 
         return Response(
-            UserSerializer(
-                instance=user,
-                status=status.HTTP_201_CREATED)
+            UserSerializer(instance=user, context={'request': request}).data,
+            status=status.HTTP_201_CREATED,
         )

@@ -9,10 +9,12 @@ class CustomUserManager(UserManager):
     def create_user(self, *args, **kwargs):
         user = UserManager.create_user(self, *args, **kwargs)
 
-        group_name = 'teachers' if user.role is 'TE' else 'students'
+        group_name = 'teachers' if user.role == 'TE' else 'students'
         group = Group.objects.get(name=group_name)
         if group is not None:
             group.user_set.add(user)
+
+        return user
 
 
 class User(AbstractUser):
