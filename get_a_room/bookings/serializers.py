@@ -21,9 +21,10 @@ class BookingSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField()
 
     def validate(self, data):
+        print("Entered serializer validata!")
         super(BookingSerializer, self).validate(data)
-
-        print(data)
+        booking = Booking(**data)
+        booking.clean()
         return data
 
     class Meta:
@@ -38,5 +39,3 @@ class BookingSerializer(serializers.ModelSerializer):
             'end_time',
             'day_of_week'
         )
-
-

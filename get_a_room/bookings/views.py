@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
+
 from bookings.models import Booking
 from bookings.serializers import BookingSerializer
 
@@ -9,4 +11,3 @@ class BookingViewSet(viewsets.ModelViewSet):
     """
     queryset = Booking.objects.all().order_by('start_date')
     serializer_class = BookingSerializer
-    # http_method_names = ['get', 'head', 'options']
