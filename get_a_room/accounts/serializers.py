@@ -16,22 +16,15 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-
+    """
     groups = SimpleGroupSerializer(
         many=True,
         read_only=True
     )
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            validated_data
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-
+    """
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('url', 'username', 'email', 'role')
 
 
 class GroupSerializer(serializers.ModelSerializer):
