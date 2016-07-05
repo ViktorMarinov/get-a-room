@@ -14,7 +14,7 @@ class BookingSerializer(serializers.ModelSerializer):
     )
 
     user = serializers.PrimaryKeyRelatedField(
-        queryset=UserViewSet.queryset
+        read_only=True
     )
 
     start_date = serializers.DateField()

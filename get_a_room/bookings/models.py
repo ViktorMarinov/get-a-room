@@ -12,8 +12,7 @@ from rooms.models import Room
 
 class BookingManager(models.Manager):
     def create(*args, **kwargs):
-        print("Entered manager create!")
-        #Check if time slot is available before creating
+        # check time slot
         return models.Manager.create(*args, **kwargs)
 
 
