@@ -14,14 +14,15 @@ class BookingSerializer(serializers.ModelSerializer):
     )
 
     user = serializers.PrimaryKeyRelatedField(
-        read_only=True
+        queryset=UserViewSet.queryset,
+        allow_null=True,
+        default=serializers.CurrentUserDefault()
     )
 
     start_date = serializers.DateField()
     end_date = serializers.DateField()
 
     def validate(self, data):
-        print("Entered serializer validata!")
         super(BookingSerializer, self).validate(data)
         booking = Booking(**data)
         booking.clean()

@@ -21,9 +21,8 @@ class BookingViewSet(viewsets.ModelViewSet):
         if not user.has_perm('bookings.add_booking'):
             body = {"details": "No permission to create bookings"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
-        print(request.data)
-        import pdb; pdb.set_trace()
-        super(viewsets.ModelViewSet, self).create(request, *args, **kwargs)
+        request.data['user'] = user.id
+        return super(BookingViewSet, self).create(request, *args, **kwargs)
 
     """
     Endpoint for updating bookings.
@@ -33,7 +32,13 @@ class BookingViewSet(viewsets.ModelViewSet):
         if not user.has_perm('bookings.change_booking'):
             body = {"details": "No permission to update bookings"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
-        super(viewsets.ModelViewSet, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        if instance.user_id != user.id:
+            body = {"details": "No permission to update this booking"}
+            return Response(body, status=status.HTTP_401_UNAUTHORIZED)
+
+        return super(BookingViewSet, self).update(request, *args, **kwargs)
 
     """
     Endpoint for deleting bookings.
@@ -43,4 +48,10 @@ class BookingViewSet(viewsets.ModelViewSet):
         if not user.has_perm('bookings.delete_booking'):
             body = {"details": "No permission to delete bookings"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
-        super(viewsets.ModelViewSet, self).update(request, *args, **kwargs)
+        instance = self.get_object()
+
+        if instance.user_id != user.id:
+            body = {"details": "No permission to delete this booking"}
+            return Response(body, status=status.HTTP_401_UNAUTHORIZED)
+
+        return super(BookingViewSet, self).update(request, *args, **kwargs)

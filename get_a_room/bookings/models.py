@@ -12,7 +12,17 @@ from rooms.models import Room
 
 class BookingManager(models.Manager):
     def create(*args, **kwargs):
-        # check time slot
+        booking_on_room = Booking.objects.filter(
+            room_number=kwargs['room_number'])
+        for booking in booking_on_room:
+            if booking.day_of_week == kwargs['day_of_week']:
+                if (booking.end_date >= kwargs['start_date'] and
+                   booking.start_date <= kwargs['end_date']):
+                    if (booking.end_time > kwargs['start_time'] and
+                       booking.start_time < kwargs['end_time']):
+                        raise serializers.ValidationError(
+                            "Time slot is not available for that room")
+
         return models.Manager.create(*args, **kwargs)
 
 
@@ -38,10 +48,13 @@ class Booking(models.Model):
     objects = BookingManager()
 
     def clean(self):
-        print("Entered model clean")
         if self.start_date > self.end_date:
             raise serializers.ValidationError(
                 "Start date cannot be after end date!")
+
+        if self.start_date < datetime.datetime.now().date():
+            raise serializers.ValidationError(
+                "Start date cannot be in the past!")
 
         if self.start_time > self.end_time:
             raise serializers.ValidationError(
@@ -69,4 +82,6 @@ class Booking(models.Model):
                     "Day of week does not match given dates")
 
     def __str__(self):
-        return str(self.__dict__)
+        return "{} {} Dates: {} - {} Time: {} - {} Day: {}".format(
+            self.room_number, self.user, self.start_date, self.end_date,
+            self.start_time, self.end_time, self.day_of_week)
