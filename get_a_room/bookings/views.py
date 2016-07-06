@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import list_route
 
 from bookings.models import Booking
 from bookings.serializers import BookingSerializer
@@ -21,6 +22,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         if not user.has_perm('bookings.add_booking'):
             body = {"details": "No permission to create bookings"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
+
         request.data['user'] = user.id
         return super(BookingViewSet, self).create(request, *args, **kwargs)
 
@@ -37,7 +39,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         if instance.user_id != user.id:
             body = {"details": "No permission to update this booking"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
-
+        request.data['id'] = instance.id
         return super(BookingViewSet, self).update(request, *args, **kwargs)
 
     """
@@ -48,10 +50,20 @@ class BookingViewSet(viewsets.ModelViewSet):
         if not user.has_perm('bookings.delete_booking'):
             body = {"details": "No permission to delete bookings"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
-        instance = self.get_object()
 
+        instance = self.get_object()
         if instance.user_id != user.id:
             body = {"details": "No permission to delete this booking"}
             return Response(body, status=status.HTTP_401_UNAUTHORIZED)
 
-        return super(BookingViewSet, self).update(request, *args, **kwargs)
+        return super(BookingViewSet, self).destroy(request, *args, **kwargs)
+
+    @list_route()
+    def filter(self, request):
+        params = request.query_params.dict()
+        print(params)
+        filtered_set = Booking.objects.filter(**params)
+        print(filtered_set)
+        serializer = BookingSerializer(
+            filtered_set, context={'request': request}, many=True)
+        return Response(serializer.data)

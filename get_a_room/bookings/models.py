@@ -12,17 +12,7 @@ from rooms.models import Room
 
 class BookingManager(models.Manager):
     def create(*args, **kwargs):
-        booking_on_room = Booking.objects.filter(
-            room_number=kwargs['room_number'])
-        for booking in booking_on_room:
-            if booking.day_of_week == kwargs['day_of_week']:
-                if (booking.end_date >= kwargs['start_date'] and
-                   booking.start_date <= kwargs['end_date']):
-                    if (booking.end_time > kwargs['start_time'] and
-                       booking.start_time < kwargs['end_time']):
-                        raise serializers.ValidationError(
-                            "Time slot is not available for that room")
-
+        Booking.check_time_slot(None, kwargs)
         return models.Manager.create(*args, **kwargs)
 
 
@@ -77,9 +67,28 @@ class Booking(models.Model):
                     flag = True
                     break
                 date_iter = date_iter + datetime.timedelta(1)
+
             if not flag:
                 raise serializers.ValidationError(
                     "Day of week does not match given dates")
+
+    def check_time_slot(self, new_data):
+        bookings_on_room = Booking.objects.filter(
+            room_number=new_data['room_number'])
+        id = None
+        if self is not None:
+            id = self.id
+        for booking in bookings_on_room:
+            if id is not None and id == booking.id:
+                continue
+
+            if booking.day_of_week == new_data['day_of_week']:
+                if (booking.end_date >= new_data['start_date'] and
+                   booking.start_date <= new_data['end_date']):
+                    if (booking.end_time > new_data['start_time'] and
+                       booking.start_time < new_data['end_time']):
+                        raise serializers.ValidationError(
+                            "Time slot is not available for that room")
 
     def __str__(self):
         return "{} {} Dates: {} - {} Time: {} - {} Day: {}".format(

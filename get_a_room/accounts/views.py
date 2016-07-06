@@ -30,6 +30,14 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @list_route()
+    def filter(self, request):
+        params = request.query_params.dict()
+        filtered_set = User.objects.filter(**params)
+        serializer = UserSerializer(
+            filtered_set, context={'request': request}, many=True)
+        return Response(serializer.data)
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     """

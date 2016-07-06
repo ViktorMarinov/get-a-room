@@ -22,6 +22,12 @@ class BookingSerializer(serializers.ModelSerializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
 
+    def update(self, *args, **kwargs):
+        old_booking = args[0]
+        new_data = args[1]
+        old_booking.check_time_slot(new_data)
+        return super(BookingSerializer, self).update(*args, **kwargs)
+
     def validate(self, data):
         super(BookingSerializer, self).validate(data)
         booking = Booking(**data)
