@@ -1,5 +1,4 @@
 from django.contrib.auth.models import Group
-from django.shortcuts import get_object_or_404
 
 from accounts.models import User
 from accounts.serializers import UserSerializer, GroupSerializer
@@ -8,8 +7,10 @@ from accounts.serializers import SimpleUserSerializer
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
-from rest_framework.decorators import detail_route, list_route, api_view
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,16 +20,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     http_method_names = ['get', 'head', 'options']
-
-    @list_route()
-    def getuser(self, request):
-        username = request.query_params.get('username', None)
-        if username is not None:
-            user = get_object_or_404(User, username=username)
-            serializer = UserSerializer(user, context={'request': request})
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @list_route()
     def filter(self, request):
@@ -64,6 +55,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST', 'GET'])
+@permission_classes((AllowAny,))
 def register(request):
     USER_FIELDS = ['username', 'password', 'email', 'role']
     serialized = UserSerializer(data=request.data)
