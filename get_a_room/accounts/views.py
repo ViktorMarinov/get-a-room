@@ -4,6 +4,7 @@ from accounts.models import User
 from accounts.serializers import UserSerializer, GroupSerializer
 from accounts.serializers import SimpleUserSerializer
 
+from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
@@ -15,7 +16,7 @@ from rest_framework.permissions import AllowAny
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to be viewed as list or by id.
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -23,7 +24,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def filter(self, request):
+        """
+        Filter users by the given query params.
+        """
         params = request.query_params.dict()
+        try:
+            del params['format']
+        except KeyError:
+            pass
         filtered_set = User.objects.filter(**params)
         serializer = UserSerializer(
             filtered_set, context={'request': request}, many=True)
@@ -32,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows groups to be viewed as list or by id.
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -57,6 +65,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 @api_view(['POST', 'GET'])
 @permission_classes((AllowAny,))
 def register(request):
+    """
+    Endpoint for registration.
+    Does not require any permissions, so that anyone can access it.
+    """
     USER_FIELDS = ['username', 'password', 'email', 'role']
     serialized = UserSerializer(data=request.data)
     if serialized.is_valid(raise_exception=True):
