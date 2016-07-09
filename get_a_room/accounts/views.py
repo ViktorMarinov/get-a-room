@@ -27,12 +27,17 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Filter users by the given query params.
         """
+        ALLOWED_PARAMS = {'username', 'role'}
         params = request.query_params.dict()
+        params = {
+            key: params[key] for key in params if key in ALLOWED_PARAMS
+        }
         try:
-            del params['format']
-        except KeyError:
-            pass
-        filtered_set = User.objects.filter(**params)
+            filtered_set = User.objects.filter(**params)
+        except:
+            return Response(
+                {'details': 'Invalid query params'},
+                status=status.HTTP_400_BAD_REQUEST)
         serializer = UserSerializer(
             filtered_set, context={'request': request}, many=True)
         return Response(serializer.data)

@@ -22,6 +22,7 @@ class Room(models.Model):
         room = cls(number=number,
                    capacity=capacity,
                    is_computer_room=is_computer_room)
+        room.save()
         return room
 
 
