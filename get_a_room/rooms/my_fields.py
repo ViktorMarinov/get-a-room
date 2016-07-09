@@ -13,6 +13,10 @@ DAYS_OF_THE_WEEK = (
 
 
 class DayOfTheWeekField(models.CharField):
+    """
+    A CharField representing days of the week
+    Used in the booking model.
+    """
     def __init__(self, *args, **kwargs):
         kwargs['choices'] = DAYS_OF_THE_WEEK
         kwargs['max_length'] = 2

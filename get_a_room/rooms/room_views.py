@@ -11,7 +11,8 @@ from rest_framework.response import Response
 
 class RoomViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows rooms to be viewed or edited.
+    API view set for Room model. Contains multiple views.
+    Can list all room or room details
     """
     queryset = Room.objects.all().order_by('number')
     serializer_class = RoomSerializer

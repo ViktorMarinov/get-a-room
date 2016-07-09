@@ -7,6 +7,10 @@ from rest_framework import serializers
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Booking model, used to represent the model 
+    to the API and vice versa
+    """
 
     room_number = serializers.PrimaryKeyRelatedField(
         queryset=RoomViewSet.queryset

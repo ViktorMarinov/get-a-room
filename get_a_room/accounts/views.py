@@ -16,7 +16,7 @@ from rest_framework.permissions import AllowAny
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed as list or by id.
+    API view set that allows users to be viewed as list or by id.
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed as list or by id.
+    API view set that allows groups to be viewed as list or by id.
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer

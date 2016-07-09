@@ -7,6 +7,10 @@ from accounts.my_fields import UserRoleField
 
 
 class CustomUserManager(UserManager):
+    """
+    Manager for User objects, automaticly adding the users
+    in teachers or students group, depending on their role
+    """
     def create_user(self, *args, **kwargs):
         user = UserManager.create_user(self, *args, **kwargs)
 
@@ -19,6 +23,11 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractUser):
+    """
+    A model representing a user. Extends the AbstractUser
+    with a role field, used to determine if the user is
+    teacher or student
+    """
     role = UserRoleField(
         default='ST',
         blank=False,

@@ -8,6 +8,10 @@ USER_ROLES = (
 
 
 class UserRoleField(models.CharField):
+    """
+    A CharField representing the user role
+    Can be ST (Student) or TE (Teacher)
+    """
     def __init__(self, *args, **kwargs):
         kwargs['default'] = 'ST'
         kwargs['max_length'] = 2

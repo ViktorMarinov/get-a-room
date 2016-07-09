@@ -16,12 +16,6 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    groups = SimpleGroupSerializer(
-        many=True,
-        read_only=True
-    )
-    """
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'role')

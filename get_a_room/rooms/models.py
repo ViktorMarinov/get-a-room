@@ -10,6 +10,9 @@ from rest_framework import serializers
 
 
 class Room(models.Model):
+    """
+    A model representing a room of the faculty
+    """
     number = models.IntegerField(primary_key=True, unique=True, blank=False)
     capacity = models.PositiveIntegerField(blank=False)
     is_computer_room = models.BooleanField(default=False)
@@ -33,6 +36,12 @@ class BookingManager(models.Manager):
 
 
 class Booking(models.Model):
+    """
+    A model representing a single booking.
+    It may book only one day per week in the period
+    start date to end date in the time interval
+    start time to end time
+    """
     room_number = models.ForeignKey(
         Room,
         related_name='booking',
@@ -54,6 +63,9 @@ class Booking(models.Model):
     objects = BookingManager()
 
     def clean(self):
+        """
+        Checks if the values of a new booking are valid
+        """
         if self.start_date > self.end_date:
             raise serializers.ValidationError(
                 "Start date cannot be after end date!")
@@ -89,6 +101,11 @@ class Booking(models.Model):
                     "Day of week does not match given dates")
 
     def check_time_slot(self, new_data):
+        """
+        Checks if the time slot in new_data is available.
+        If a booking is getting updated then it is skipped
+        when checking the availability of the room.
+        """
         bookings_on_room = Booking.objects.filter(
             room_number=new_data['room_number'])
         id = None
